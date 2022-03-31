@@ -11,7 +11,6 @@ sf::View Mainview(sf::FloatRect(0, 0, 1920, 1080));
 sf::RectangleShape Ball;
 sf::RectangleShape RightPaddle;
 sf::RectangleShape LeftPaddle;
-sf::RectangleShape DebugRect;
 
 
 int main() {
@@ -29,16 +28,10 @@ int main() {
         Ball.setSize(sf::Vector2f(40, 40));
         Ball.setOrigin(sf::Vector2f(20, 20));
         Ball.setPosition(960, 540);
-        Ball.setFillColor(sf::Color::Red);
 
         RightPaddle.setSize(sf::Vector2f(30, 200));
         RightPaddle.setOrigin(sf::Vector2f(15, 100));
         RightPaddle.setPosition(60, 540);
-        RightPaddle.setFillColor(sf::Color::Red);
-
-        DebugRect.setSize(sf::Vector2f(1920, 1080));
-        DebugRect.setOrigin(sf::Vector2f(960, 540));
-        DebugRect.setPosition(960, 540);
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
@@ -52,7 +45,6 @@ int main() {
 
         window.clear();
 
-        window.draw(DebugRect);
         window.draw(Ball);
         window.draw(LeftPaddle);
         window.draw(RightPaddle);
