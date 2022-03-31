@@ -12,10 +12,21 @@ sf::RectangleShape Ball;
 sf::RectangleShape RightPaddle;
 sf::RectangleShape LeftPaddle;
 
-
 int main() {
+    sf::Clock clock;
+
+    Ball.setSize(sf::Vector2f(40, 40));
+    Ball.setOrigin(sf::Vector2f(20, 20));
+    Ball.setPosition(960, 540);
+
+    LeftPaddle.setSize(sf::Vector2f(30, 200));
+    LeftPaddle.setOrigin(sf::Vector2f(15, 100));
+    LeftPaddle.setPosition(40, 540);
+
     while (window.isOpen())
     {
+        sf::Time elapsed = clock.restart();
+
         float ScreenRatio = Screenwidth / Screenheight;
         Mainview.setViewport(sf::FloatRect((1.f - (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f)) / 2, (1.f - (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)) / 2, (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f), (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)));
         if (Mainview.getViewport().top * 2 > Mainview.getViewport().left * 2) {
@@ -25,13 +36,16 @@ int main() {
         }
         window.setView(Mainview);
 
-        Ball.setSize(sf::Vector2f(40, 40));
-        Ball.setOrigin(sf::Vector2f(20, 20));
-        Ball.setPosition(960, 540);
-
-        RightPaddle.setSize(sf::Vector2f(30, 200));
-        RightPaddle.setOrigin(sf::Vector2f(15, 100));
-        RightPaddle.setPosition(60, 540);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            if (LeftPaddle.getPosition().y > 100.f) {
+                LeftPaddle.move(0.f, -500.f * elapsed.asSeconds());
+            }
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            if (LeftPaddle.getPosition().y < 980.f) {
+                LeftPaddle.move(0.f, 500.f * elapsed.asSeconds());
+            }
+        }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
