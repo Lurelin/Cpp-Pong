@@ -19,6 +19,8 @@ int main() {
     Ball.setOrigin(sf::Vector2f(20, 20));
     Ball.setPosition(960, 540);
 
+    sf::Vector2f dir(450.f, 450.f);
+
     LeftPaddle.setSize(sf::Vector2f(30, 200));
     LeftPaddle.setOrigin(sf::Vector2f(15, 100));
     LeftPaddle.setPosition(40, 540);
@@ -46,6 +48,14 @@ int main() {
                 LeftPaddle.move(0.f, 500.f * elapsed.asSeconds());
             }
         }
+
+        if (Ball.getPosition().x + dir.x * elapsed.asSeconds() > Screenwidth - 20) {
+            dir = sf::Vector2f(-dir.x, dir.y);
+        } 
+        if (Ball.getPosition().y + dir.y * elapsed.asSeconds() > Screenheight - 20 || Ball.getPosition().y + dir.y * elapsed.asSeconds() < 20) {
+            dir = sf::Vector2f(dir.x, -dir.y);
+        }
+        Ball.move(dir * elapsed.asSeconds());
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
