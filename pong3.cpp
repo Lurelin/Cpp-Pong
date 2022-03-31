@@ -57,6 +57,11 @@ int main() {
         }
         Ball.move(dir * elapsed.asSeconds());
 
+        sf::FloatRect BallPlusMove(Ball.getGlobalBounds().left + dir.x * elapsed.asSeconds(), Ball.getGlobalBounds().top + dir.y * elapsed.asSeconds(), Ball.getGlobalBounds().width, Ball.getGlobalBounds().height);
+        if (BallPlusMove.intersects(LeftPaddle.getGlobalBounds())) {
+            dir = sf::Vector2f(-dir.x, dir.y);
+        }
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
         }
