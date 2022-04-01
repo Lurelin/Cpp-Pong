@@ -71,17 +71,20 @@ int main() {
         if (Ball.getPosition().x + dir.x * elapsed.asSeconds() < -20) {
             BallCountdown = 3;
             Ball.setPosition(Screenwidth / 2, Screenheight / 2);
+            dir = sf::Vector2f(450.f, 450.f);
         } 
         if (Ball.getPosition().y + dir.y * elapsed.asSeconds() > Screenheight - 20 || Ball.getPosition().y + dir.y * elapsed.asSeconds() < 20) {
             dir = sf::Vector2f(dir.x, -dir.y);
         }
-        if (BallCountdown < 0) {
-            Ball.move(dir * elapsed.asSeconds());
-        }
 
         sf::FloatRect BallPlusMove(Ball.getGlobalBounds().left + dir.x * elapsed.asSeconds(), Ball.getGlobalBounds().top + dir.y * elapsed.asSeconds(), Ball.getGlobalBounds().width, Ball.getGlobalBounds().height);
         if (BallPlusMove.intersects(LeftPaddle.getGlobalBounds())) {
-            dir = sf::Vector2f(-dir.x, dir.y);
+            dir = sf::Vector2f(-dir.x * 1.05f, dir.y * 1.05f);
+            Ball.move(dir * 2.5f * elapsed.asSeconds());
+        } 
+
+        if (BallCountdown < 0) {
+            Ball.move(dir * elapsed.asSeconds());
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
