@@ -110,8 +110,16 @@ int main() {
 
         sf::FloatRect BallPlusMove(Ball.getGlobalBounds().left + dir.x * elapsed.asSeconds(), Ball.getGlobalBounds().top + dir.y * elapsed.asSeconds(), Ball.getGlobalBounds().width, Ball.getGlobalBounds().height);
         if (BallPlusMove.intersects(LeftPaddle.getGlobalBounds())) {
-            dir = sf::Vector2f(-dir.x * 1.05f, dir.y * 1.05f);
-            Ball.move(dir * 2.5f * elapsed.asSeconds());
+            float Offset = 0.1 - std::abs(LeftPaddle.getPosition().y - (BallPlusMove.top + BallPlusMove.height / 2)) * 0.001f;
+            //dir = sf::Vector2f(-dir.x * 1.05f, dir.y * 1.05f);
+            dir = sf::Vector2f(-dir.x, dir.y);
+            if (Offset < 0.05f) {
+                dir.y = dir.y + dir.y * Offset * 4;
+            } else {
+                dir.x = dir.x + dir.x * Offset * 2;
+            }
+            //std::cout << std::to_string(dir.x) << "  " << std::to_string(dir.y) << "  " << std::to_string(Offset) << "\n";
+            Ball.move(dir * 10.f * elapsed.asSeconds());
         } 
 
         if (BallCountdown < 0 && PauseGame == false) {
