@@ -39,6 +39,8 @@ int main() {
     countdown.setOrigin(countdown.getLocalBounds().left + countdown.getLocalBounds().width / 2, countdown.getLocalBounds().top + countdown.getLocalBounds().height / 2);
     countdown.setPosition(Screenwidth / 2, Screenheight / 2);
 
+    window.setKeyRepeatEnabled(false);
+
     while (window.isOpen())
     {
         sf::Time elapsed = clock.restart();
@@ -86,16 +88,18 @@ int main() {
             Ball.move(dir * elapsed.asSeconds());
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            PauseGame = !PauseGame;
-            BallCountdown = 3;
-        }
-
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            if (event.type == sf::Event::Closed) {
                 window.close();
+            }
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::Escape) {
+                    PauseGame = !PauseGame;
+                    BallCountdown = 3;
+                }
+            }
         }
 
         window.clear();
