@@ -7,11 +7,12 @@ float Screenheight = 1080.f;
 sf::RenderWindow window(sf::VideoMode(Screenwidth, Screenheight), "Pong! :)");
 sf::View Mainview(sf::FloatRect(0, 0, 1920, 1080));
 
-//Declaring Objects
 sf::RectangleShape Ball;
 sf::RectangleShape RightPaddle;
 sf::RectangleShape LeftPaddle;
 sf::Font Montserrat;
+
+bool PauseGame = false;
 
 int main() {
     sf::Clock clock;
@@ -41,9 +42,7 @@ int main() {
     while (window.isOpen())
     {
         sf::Time elapsed = clock.restart();
-        if (BallCountdown > 0) {
-            BallCountdown -= elapsed.asSeconds();
-        }
+        BallCountdown -= elapsed.asSeconds();
 
         float ScreenRatio = Screenwidth / Screenheight;
         Mainview.setViewport(sf::FloatRect((1.f - (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f)) / 2, (1.f - (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)) / 2, (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f), (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)));
@@ -83,12 +82,13 @@ int main() {
             Ball.move(dir * 2.5f * elapsed.asSeconds());
         } 
 
-        if (BallCountdown < 0) {
+        if (BallCountdown < 0 && PauseGame == false) {
             Ball.move(dir * elapsed.asSeconds());
         }
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            window.close();
+            PauseGame = !PauseGame;
+            BallCountdown = 3;
         }
 
         sf::Event event;
@@ -102,13 +102,26 @@ int main() {
 
         window.draw(LeftPaddle);
         window.draw(RightPaddle);
-        if (BallCountdown < 0) {
+
+        if (BallCountdown <= 0 || PauseGame == true) {
             window.draw(Ball);
-        } else {
+        } 
+        if (BallCountdown > 0 && PauseGame == false) {
             int BallCountdownCeil = std::ceil(BallCountdown);
             countdown.setString(std::to_string(BallCountdownCeil));
             window.draw(countdown);
         }
+
+        if (PauseGame == true) {
+            countdown.setString("ll");
+            countdown.setScale(sf::Vector2f(2.f, 1.f));
+            countdown.setLetterSpacing(-0.5f);
+            window.draw(countdown);
+        } else {
+            countdown.setScale(sf::Vector2f(1.f, 1.f));
+            countdown.setLetterSpacing(1);
+        }
+
         window.display();
     }
 }
