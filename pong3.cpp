@@ -11,6 +11,7 @@ sf::RectangleShape Ball;
 sf::RectangleShape RightPaddle;
 sf::RectangleShape LeftPaddle;
 sf::Font Montserrat;
+sf::RectangleShape BorderRect;
 
 bool PauseGame = false;
 
@@ -26,25 +27,53 @@ int main() {
     LeftPaddle.setSize(sf::Vector2f(30, 200));
     LeftPaddle.setOrigin(sf::Vector2f(15, 100));
     LeftPaddle.setPosition(40, 540);
+    
+    BorderRect.setSize(sf::Vector2f(Screenwidth - 16, Screenheight - 16));
+    BorderRect.setOrigin(sf::Vector2f((Screenwidth - 16) / 2, (Screenheight - 16) / 2));
+    BorderRect.setPosition(Screenwidth / 2, Screenheight / 2);
+    BorderRect.setFillColor(sf::Color::Transparent);
+    BorderRect.setOutlineColor(sf::Color::White);
+    BorderRect.setOutlineThickness(8);
 
     float BallCountdown = 3;
 
-    Montserrat.loadFromFile("Pong/Montserrat-Regular.ttf");
+    //For windows
+    Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
+    //For Linux
+    //Montserrat.loadFromFile("Pong/Montserrat-Regular.ttf");
 
     sf::Text countdown;
-
     countdown.setFont(Montserrat);
-    countdown.setCharacterSize(192);
+    countdown.setCharacterSize(284);
     countdown.setString("1");
     countdown.setOrigin(countdown.getLocalBounds().left + countdown.getLocalBounds().width / 2, countdown.getLocalBounds().top + countdown.getLocalBounds().height / 2);
     countdown.setPosition(Screenwidth / 2, Screenheight / 2);
+
+    sf::Text ScoreAI;
+    ScoreAI.setFont(Montserrat);
+    ScoreAI.setCharacterSize(192);
+    ScoreAI.setString("0");
+    ScoreAI.setOrigin(countdown.getLocalBounds().left + countdown.getLocalBounds().width / 2, countdown.getLocalBounds().top + countdown.getLocalBounds().height / 2);
+    ScoreAI.setPosition(Screenwidth * 0.75f, Screenheight * 0.25f);
+
+    sf::Text ScorePlayer;
+    ScorePlayer.setFont(Montserrat);
+    ScorePlayer.setCharacterSize(192);
+    ScorePlayer.setString("0");
+    ScorePlayer.setOrigin(countdown.getLocalBounds().left + countdown.getLocalBounds().width / 2, countdown.getLocalBounds().top + countdown.getLocalBounds().height / 2);
+    ScorePlayer.setPosition(Screenwidth * 0.25f, Screenheight * 0.25f);
+
+    int PlayerScore = 0;
+    int AIScore = 0;
 
     window.setKeyRepeatEnabled(false);
 
     while (window.isOpen())
     {
         sf::Time elapsed = clock.restart();
-        BallCountdown -= elapsed.asSeconds();
+        if (PauseGame == false) {
+            BallCountdown -= elapsed.asSeconds();
+        }
 
         float ScreenRatio = Screenwidth / Screenheight;
         Mainview.setViewport(sf::FloatRect((1.f - (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f)) / 2, (1.f - (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)) / 2, (window.getSize().y * ScreenRatio) / (window.getSize().x * 1.f), (window.getSize().x * 1.f) / (window.getSize().y * ScreenRatio)));
@@ -70,6 +99,7 @@ int main() {
             dir = sf::Vector2f(-dir.x, dir.y);
         } 
         if (Ball.getPosition().x + dir.x * elapsed.asSeconds() < -20) {
+            AIScore++;
             BallCountdown = 3;
             Ball.setPosition(Screenwidth / 2, Screenheight / 2);
             dir = sf::Vector2f(450.f, 450.f);
@@ -102,13 +132,19 @@ int main() {
             }
         }
 
+        ScoreAI.setString(std::to_string(AIScore));
+        ScorePlayer.setString(std::to_string(PlayerScore));
+
         window.clear();
 
         window.draw(LeftPaddle);
         window.draw(RightPaddle);
+        window.draw(BorderRect);
 
-        if (BallCountdown <= 0 || PauseGame == true) {
+        if (BallCountdown <= 0) {
             window.draw(Ball);
+            window.draw(ScoreAI);
+            window.draw(ScorePlayer);
         } 
         if (BallCountdown > 0 && PauseGame == false) {
             int BallCountdownCeil = std::ceil(BallCountdown);
@@ -121,7 +157,6 @@ int main() {
             countdown.setScale(sf::Vector2f(2.f, 1.f));
             countdown.setLetterSpacing(-0.5f);
             window.draw(countdown);
-        } else {
             countdown.setScale(sf::Vector2f(1.f, 1.f));
             countdown.setLetterSpacing(1);
         }
