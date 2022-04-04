@@ -14,6 +14,17 @@ sf::Font Montserrat;
 sf::RectangleShape BorderRect;
 
 bool PauseGame = false;
+bool BallIntersectsLeftPaddle = false;
+bool BallIntersectsRightPaddle = false;
+
+void AIMovement(float targetposition, float ElapsedTime) {
+    if (RightPaddle.getPosition().y < targetposition) {
+        
+    } 
+    if (RightPaddle.getPosition().y > targetposition) {
+
+    }
+}
 
 int main() {
     sf::Clock clock;
@@ -27,6 +38,10 @@ int main() {
     LeftPaddle.setSize(sf::Vector2f(30, 200));
     LeftPaddle.setOrigin(sf::Vector2f(15, 100));
     LeftPaddle.setPosition(40, 540);
+
+    RightPaddle.setSize(sf::Vector2f(30, 200));
+    RightPaddle.setOrigin(sf::Vector2f(15, 100));
+    RightPaddle.setPosition(1880, 540);
     
     BorderRect.setSize(sf::Vector2f(Screenwidth - 16, Screenheight - 16));
     BorderRect.setOrigin(sf::Vector2f((Screenwidth - 16) / 2, (Screenheight - 16) / 2));
@@ -38,9 +53,9 @@ int main() {
     float BallCountdown = 3;
 
     //For windows
-    Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
+    //Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
     //For Linux
-    //Montserrat.loadFromFile("Pong/Montserrat-Regular.ttf");
+    Montserrat.loadFromFile("Pong/Montserrat-Regular.ttf");
 
     sf::Text countdown;
     countdown.setFont(Montserrat);
@@ -109,7 +124,11 @@ int main() {
         }
 
         sf::FloatRect BallPlusMove(Ball.getGlobalBounds().left + dir.x * elapsed.asSeconds(), Ball.getGlobalBounds().top + dir.y * elapsed.asSeconds(), Ball.getGlobalBounds().width, Ball.getGlobalBounds().height);
-        if (BallPlusMove.intersects(LeftPaddle.getGlobalBounds())) {
+        if (!(BallPlusMove.intersects(LeftPaddle.getGlobalBounds())) && BallIntersectsLeftPaddle == true) {
+            BallIntersectsLeftPaddle = false;
+        }
+        if (BallPlusMove.intersects(LeftPaddle.getGlobalBounds()) && BallIntersectsLeftPaddle == false) {
+            BallIntersectsLeftPaddle = true;
             float Offset = 0.1 - std::abs(LeftPaddle.getPosition().y - (BallPlusMove.top + BallPlusMove.height / 2)) * 0.001f;
             //dir = sf::Vector2f(-dir.x * 1.05f, dir.y * 1.05f);
             dir = sf::Vector2f(-dir.x, dir.y);
@@ -119,8 +138,24 @@ int main() {
                 dir.x = dir.x + dir.x * Offset * 2;
             }
             //std::cout << std::to_string(dir.x) << "  " << std::to_string(dir.y) << "  " << std::to_string(Offset) << "\n";
-            Ball.move(dir * 10.f * elapsed.asSeconds());
-        } 
+            Ball.move(dir * elapsed.asSeconds());
+        }
+
+        if (!(BallPlusMove.intersects(RightPaddle.getGlobalBounds())) && BallIntersectsRightPaddle == true) {
+            BallIntersectsRightPaddle = false;
+        }
+        if (BallPlusMove.intersects(RightPaddle.getGlobalBounds()) && BallIntersectsRightPaddle == false) {
+            BallIntersectsRightPaddle = true;
+            float Offset = 0.1 - std::abs(RightPaddle.getPosition().y - (BallPlusMove.top + BallPlusMove.height / 2)) * 0.001f;
+            //dir = sf::Vector2f(-dir.x * 1.05f, dir.y * 1.05f);
+            dir = sf::Vector2f(-dir.x, dir.y);
+            if (Offset < 0.05f) {
+                dir.y = dir.y + dir.y * Offset * 4;
+            } else {
+                dir.x = dir.x + dir.x * Offset * 2;
+            }
+            Ball.move(dir * elapsed.asSeconds());
+        }
 
         if (BallCountdown < 0 && PauseGame == false) {
             Ball.move(dir * elapsed.asSeconds());
