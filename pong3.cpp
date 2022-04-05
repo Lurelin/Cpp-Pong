@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
-//test
 
 float Screenwidth = 1920.f;
 float Screenheight = 1080.f;
@@ -19,11 +18,11 @@ bool BallIntersectsLeftPaddle = false;
 bool BallIntersectsRightPaddle = false;
 
 void AIMovement(float targetposition, float ElapsedTime) {
-    if (RightPaddle.getPosition().y < targetposition) {
-        
+    if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y > 980.f) {
+        RightPaddle.move(sf::Vector2f(500.f * ElapsedTime, 0.f));
     } 
-    if (RightPaddle.getPosition().y > targetposition) {
-
+    if (RightPaddle.getPosition().y > targetposition  && RightPaddle.getPosition().y < 100.f) {
+        RightPaddle.move(sf::Vector2f(-500.f * ElapsedTime, 0.f));
     }
 }
 
@@ -56,7 +55,7 @@ int main() {
     //For windows
     //Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
     //For Linux
-    Montserrat.loadFromFile("Pong/Montserrat-Regular.ttf");
+    Montserrat.loadFromFile("Cpp-Pong/Montserrat-Regular.ttf");
 
     sf::Text countdown;
     countdown.setFont(Montserrat);
@@ -112,7 +111,10 @@ int main() {
         }
 
         if (Ball.getPosition().x + dir.x * elapsed.asSeconds() > Screenwidth - 20) {
-            dir = sf::Vector2f(-dir.x, dir.y);
+            PlayerScore++;
+            BallCountdown = 3;
+            Ball.setPosition(Screenwidth / 2, Screenheight / 2);
+            dir = sf::Vector2f(450.f, 450.f);
         } 
         if (Ball.getPosition().x + dir.x * elapsed.asSeconds() < -20) {
             AIScore++;
