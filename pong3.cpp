@@ -17,6 +17,10 @@ bool PauseGame = false;
 bool BallIntersectsLeftPaddle = false;
 bool BallIntersectsRightPaddle = false;
 
+sf::Vector2f dir(450.f, 450.f);
+float AItargetpos = 810.f;
+float AItimer = 0;
+
 void AIMovement(float targetposition, float ElapsedTime) {
     if (PauseGame = false) {
         if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y > 980.f) {
@@ -28,14 +32,36 @@ void AIMovement(float targetposition, float ElapsedTime) {
     }
 }
 
+float AITargetPos(float ElapsedTime) {
+    if (AItimer > 0.25) {
+        int WhileLoopIterations = 0;
+        sf::Vector2f AIdir = sf::Vector2f(dir.x / std::abs(dir.x) * 20.f, dir.y / std::abs(dir.y) * 20.f);
+        sf::Vector2f Ballpos = Ball.getPosition();
+        while (Ballpos.x < 1850) {
+            if (Ballpos.y > Screenheight - 20 || Ballpos.y < 20) {
+                AIdir = sf::Vector2f(AIdir.x, -AIdir.y);
+            }
+            Ballpos += AIdir;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                std::cout << "While loop iterations: "  << std::to_string(WhileLoopIterations) << "\n" << "Ball position x:" << std::to_string(Ball.getPosition().x) << "\n" << "Ball position y:" << std::to_string(Ball.getPosition().y) << "\n" << "AI Ball position x:" << std::to_string(Ballpos.x) << "\n" << "AI Ball position y:" << std::to_string(Ballpos.y) << "\n";
+            }
+            WhileLoopIterations++;
+        }
+        std::cout << std::to_string(WhileLoopIterations) << "\n";
+        AItargetpos = AIdir.x;
+        AItimer = 0;
+    } else {
+        AItimer += ElapsedTime;
+    }
+    return AItargetpos;
+}
+
 int main() {
     sf::Clock clock;
 
     Ball.setSize(sf::Vector2f(40, 40));
     Ball.setOrigin(sf::Vector2f(20, 20));
     Ball.setPosition(960, 540);
-
-    sf::Vector2f dir(450.f, 450.f);
 
     LeftPaddle.setSize(sf::Vector2f(30, 200));
     LeftPaddle.setOrigin(sf::Vector2f(15, 100));
@@ -179,6 +205,8 @@ int main() {
                 }
             }
         }
+
+        AIMovement(AITargetPos(elapsed.asSeconds()), elapsed.asSeconds());
 
         ScoreAI.setString(std::to_string(AIScore));
         ScorePlayer.setString(std::to_string(PlayerScore));
