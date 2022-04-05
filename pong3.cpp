@@ -18,11 +18,13 @@ bool BallIntersectsLeftPaddle = false;
 bool BallIntersectsRightPaddle = false;
 
 void AIMovement(float targetposition, float ElapsedTime) {
-    if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y > 980.f) {
-        RightPaddle.move(sf::Vector2f(500.f * ElapsedTime, 0.f));
-    } 
-    if (RightPaddle.getPosition().y > targetposition  && RightPaddle.getPosition().y < 100.f) {
-        RightPaddle.move(sf::Vector2f(-500.f * ElapsedTime, 0.f));
+    if (PauseGame = false) {
+        if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y > 980.f) {
+            RightPaddle.move(sf::Vector2f(500.f * ElapsedTime, 0.f));
+        } 
+        if (RightPaddle.getPosition().y > targetposition  && RightPaddle.getPosition().y < 100.f) {
+            RightPaddle.move(sf::Vector2f(-500.f * ElapsedTime, 0.f));
+        }
     }
 }
 
@@ -53,9 +55,9 @@ int main() {
     float BallCountdown = 3;
 
     //For windows
-    //Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
+    Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
     //For Linux
-    Montserrat.loadFromFile("Cpp-Pong/Montserrat-Regular.ttf");
+    //Montserrat.loadFromFile("Cpp-Pong/Montserrat-Regular.ttf");
 
     sf::Text countdown;
     countdown.setFont(Montserrat);
@@ -99,12 +101,12 @@ int main() {
         }
         window.setView(Mainview);
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && PauseGame == false) {
             if (LeftPaddle.getPosition().y > 100.f) {
                 LeftPaddle.move(0.f, -500.f * elapsed.asSeconds());
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && PauseGame == false) {
             if (LeftPaddle.getPosition().y < 980.f) {
                 LeftPaddle.move(0.f, 500.f * elapsed.asSeconds());
             }
