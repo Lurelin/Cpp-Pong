@@ -22,32 +22,27 @@ float AItargetpos = 810.f;
 float AItimer = 0;
 
 void AIMovement(float targetposition, float ElapsedTime) {
-    if (PauseGame = false) {
-        if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y > 980.f) {
-            RightPaddle.move(sf::Vector2f(500.f * ElapsedTime, 0.f));
+    std::cout << std::to_string(targetposition) << "\n";
+    if (PauseGame == false) {
+        if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y < 980.f) {
+            RightPaddle.move(sf::Vector2f(0.f, 500.f * ElapsedTime));
         } 
-        if (RightPaddle.getPosition().y > targetposition  && RightPaddle.getPosition().y < 100.f) {
-            RightPaddle.move(sf::Vector2f(-500.f * ElapsedTime, 0.f));
+        if (RightPaddle.getPosition().y > targetposition && RightPaddle.getPosition().y > 100.f) {
+            RightPaddle.move(sf::Vector2f(0.f, -500.f * ElapsedTime));
         }
     }
 }
 
 float AITargetPos(float ElapsedTime) {
     if (AItimer > 0.25) {
-        int WhileLoopIterations = 0;
         sf::Vector2f AIdir = sf::Vector2f(dir.x / std::abs(dir.x) * 20.f, dir.y / std::abs(dir.y) * 20.f);
         sf::Vector2f Ballpos = Ball.getPosition();
-        while (Ballpos.x < 1850) {
+        while (Ballpos.x < 1850 && Ballpos.x > 70) {
             if (Ballpos.y > Screenheight - 20 || Ballpos.y < 20) {
                 AIdir = sf::Vector2f(AIdir.x, -AIdir.y);
             }
             Ballpos += AIdir;
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-                std::cout << "While loop iterations: "  << std::to_string(WhileLoopIterations) << "\n" << "Ball position x:" << std::to_string(Ball.getPosition().x) << "\n" << "Ball position y:" << std::to_string(Ball.getPosition().y) << "\n" << "AI Ball position x:" << std::to_string(Ballpos.x) << "\n" << "AI Ball position y:" << std::to_string(Ballpos.y) << "\n";
-            }
-            WhileLoopIterations++;
         }
-        std::cout << std::to_string(WhileLoopIterations) << "\n";
         AItargetpos = AIdir.x;
         AItimer = 0;
     } else {
