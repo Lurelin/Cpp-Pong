@@ -22,7 +22,7 @@ float AItargetpos = 810.f;
 float AItimer = 0;
 
 void AIMovement(float targetposition, float ElapsedTime) {
-    if (PauseGame == false && std::abs(RightPaddle.getPosition().y - targetposition) > 80.f) {
+    if (PauseGame == false) {
         if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y < 980.f) {
             RightPaddle.move(sf::Vector2f(0.f, 500.f * ElapsedTime));
         } 
@@ -123,12 +123,12 @@ int main() {
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && PauseGame == false) {
             if (LeftPaddle.getPosition().y > 100.f) {
-                LeftPaddle.move(0.f, -500.f * elapsed.asSeconds());
+                LeftPaddle.move(0.f, -1000.f * elapsed.asSeconds());
             }
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && PauseGame == false) {
             if (LeftPaddle.getPosition().y < 980.f) {
-                LeftPaddle.move(0.f, 500.f * elapsed.asSeconds());
+                LeftPaddle.move(0.f, 1000.f * elapsed.asSeconds());
             }
         }
 
@@ -200,7 +200,9 @@ int main() {
             }
         }
 
-        AIMovement(AITargetPos(elapsed.asSeconds()), elapsed.asSeconds());
+        if (PauseGame == false) {
+            AIMovement(AITargetPos(elapsed.asSeconds()), elapsed.asSeconds());
+        }
 
         ScoreAI.setString(std::to_string(AIScore));
         ScorePlayer.setString(std::to_string(PlayerScore));
