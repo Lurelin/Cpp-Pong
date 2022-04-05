@@ -22,7 +22,6 @@ float AItargetpos = 810.f;
 float AItimer = 0;
 
 void AIMovement(float targetposition, float ElapsedTime) {
-    std::cout << std::to_string(targetposition) << "\n";
     if (PauseGame == false) {
         if (RightPaddle.getPosition().y < targetposition && RightPaddle.getPosition().y < 980.f) {
             RightPaddle.move(sf::Vector2f(0.f, 500.f * ElapsedTime));
@@ -43,7 +42,7 @@ float AITargetPos(float ElapsedTime) {
             }
             Ballpos += AIdir;
         }
-        AItargetpos = AIdir.x;
+        AItargetpos = Ballpos.y;
         AItimer = 0;
     } else {
         AItimer += ElapsedTime;
