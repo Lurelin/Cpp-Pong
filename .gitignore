@@ -1,0 +1,4 @@
+build/
+SFML-2.5.1/
+pong
+pong.o
