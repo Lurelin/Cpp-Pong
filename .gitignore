@@ -1,4 +1,7 @@
+#for windows
 build/
 SFML-2.5.1/
+.vscode/
+#for linux
 pong
 pong.o

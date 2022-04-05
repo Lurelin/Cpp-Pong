@@ -55,7 +55,7 @@ int main() {
     float BallCountdown = 3;
 
     //For windows
-    Montserrat.loadFromFile("C:/Users/alija/Documents/GitHub/Cpp-Pong/Montserrat-Regular.ttf");
+    Montserrat.loadFromFile("C:/Users/alija/Documents/Cpp-Pong/Montserrat-Regular.ttf");
     //For Linux
     //Montserrat.loadFromFile("Cpp-Pong/Montserrat-Regular.ttf");
 
